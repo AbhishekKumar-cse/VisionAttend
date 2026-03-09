@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 export default function UserDirectoryPage() {
   const [users, setUsers] = useState<VisionUser[]>([]);
@@ -118,8 +119,4 @@ export default function UserDirectoryPage() {
       </div>
     </div>
   );
-}
-
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(" ");
 }

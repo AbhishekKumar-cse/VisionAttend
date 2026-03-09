@@ -56,10 +56,18 @@ Analyze the following image for:
 Based on your analysis, determine if the image is optimal for facial recognition enrollment and list any specific issues. Provide detailed, actionable feedback.
 
 Example Output (if not optimal):
-{{"feedback": "The lighting is too harsh, causing strong shadows on one side of the face. Please ensure even lighting. The angle is slightly off-center; try to position the user directly facing the camera. The image resolution is good.", "isOptimal": false, "issues": ["Harsh lighting", "Off-center angle"]}}
+{
+  "feedback": "The lighting is too harsh, causing strong shadows on one side of the face. Please ensure even lighting. The angle is slightly off-center; try to position the user directly facing the camera. The image resolution is good.",
+  "isOptimal": false,
+  "issues": ["Harsh lighting", "Off-center angle"]
+}
 
 Example Output (if optimal):
-{{"feedback": "This image has optimal lighting, a perfect angle, and excellent clarity. It is ideal for facial recognition enrollment.", "isOptimal": true, "issues": []}}
+{
+  "feedback": "This image has optimal lighting, a perfect angle, and excellent clarity. It is ideal for facial recognition enrollment.",
+  "isOptimal": true,
+  "issues": []
+}
 
 Facial Image to analyze: {{media url=imageDataUri}}`,
 });
