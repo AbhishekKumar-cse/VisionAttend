@@ -20,14 +20,12 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  ResponsiveContainer, 
-  PieChart, 
-  Pie, 
-  Cell 
+  ResponsiveContainer 
 } from "recharts";
 import { generateAttendanceInsights, GenerateAttendanceInsightsOutput } from "@/ai/flows/generate-attendance-insights-flow";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
   const [records, setRecords] = useState<AttendanceRecord[]>([]);
@@ -63,7 +61,7 @@ export default function DashboardPage() {
     { label: "Total Users", value: users.length, icon: Users, color: "text-primary" },
     { label: "Today's Attendance", value: records.filter(r => new Date(r.timestamp).toDateString() === new Date().toDateString()).length, icon: CheckCircle2, color: "text-green-500" },
     { label: "Late Check-ins", value: records.filter(r => r.status === 'Late').length, icon: Clock, color: "text-orange-500" },
-    { label: "Absentees", value: users.length - records.filter(r => new Date(r.timestamp).toDateString() === new Date().toDateString()).length, icon: XCircle, color: "text-destructive" },
+    { label: "Absentees", value: Math.max(0, users.length - records.filter(r => new Date(r.timestamp).toDateString() === new Date().toDateString()).length), icon: XCircle, color: "text-destructive" },
   ];
 
   const chartData = [

@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { DataService } from "@/lib/data-service";
 import { Badge } from "@/components/ui/badge";
 import { UserPlus, Wand2, CheckCircle2, AlertTriangle, ShieldCheck } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function EnrollUserPage() {
   const [formData, setFormData] = useState({ name: "", email: "", role: "User", groupId: "" });

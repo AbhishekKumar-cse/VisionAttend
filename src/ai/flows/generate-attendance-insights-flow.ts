@@ -46,7 +46,7 @@ const generateAttendanceInsightsPrompt = ai.definePrompt({
   name: 'generateAttendanceInsightsPrompt',
   input: { schema: PromptInputSchema }, // Use the specific schema for the prompt's input
   output: { schema: GenerateAttendanceInsightsOutputSchema },
-  template: `You are an expert attendance analyst. Your task is to analyze the provided attendance data and generate concise summaries, identify significant trends, and detect unusual patterns. For any unusual patterns, suggest actionable recommendations.
+  prompt: `You are an expert attendance analyst. Your task is to analyze the provided attendance data and generate concise summaries, identify significant trends, and detect unusual patterns. For any unusual patterns, suggest actionable recommendations.
 
 Here is the raw attendance data in JSON format:
 {{{attendanceDataJson}}}
