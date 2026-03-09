@@ -1,13 +1,14 @@
-import { VisionUser, AttendanceRecord, Group } from './types';
+import { VisionUser, AttendanceRecord, Department } from './types';
 
-const USERS_KEY = 'vision_attend_users';
-const ATTENDANCE_KEY = 'vision_attend_records';
-const GROUPS_KEY = 'vision_attend_groups';
+const USERS_KEY = 'academic_vision_users';
+const ATTENDANCE_KEY = 'academic_vision_records';
+const DEPARTMENTS_KEY = 'academic_vision_depts';
 
-const DEFAULT_GROUPS: Group[] = [
-  { id: 'g1', name: 'Science Department' },
-  { id: 'g2', name: 'Morning Shift' },
-  { id: 'g3', name: 'Executive Team' },
+const DEFAULT_DEPARTMENTS: Department[] = [
+  { id: 'd1', name: 'Computer Science' },
+  { id: 'd2', name: 'Mechanical Engineering' },
+  { id: 'd3', name: 'Faculty of Arts' },
+  { id: 'd4', name: 'Business Administration' },
 ];
 
 export const DataService = {
@@ -35,20 +36,47 @@ export const DataService = {
     localStorage.setItem(ATTENDANCE_KEY, JSON.stringify(records));
   },
 
-  getGroups: (): Group[] => {
-    if (typeof window === 'undefined') return DEFAULT_GROUPS;
-    const data = localStorage.getItem(GROUPS_KEY);
-    return data ? JSON.parse(data) : DEFAULT_GROUPS;
+  getDepartments: (): Department[] => {
+    if (typeof window === 'undefined') return DEFAULT_DEPARTMENTS;
+    const data = localStorage.getItem(DEPARTMENTS_KEY);
+    return data ? JSON.parse(data) : DEFAULT_DEPARTMENTS;
   },
 
   seedDemoData: () => {
-    if (DataService.getUsers().length === 0) {
+    if (typeof window !== 'undefined' && DataService.getUsers().length === 0) {
       const demoUsers: VisionUser[] = [
-        { id: 'u1', name: 'Alex Johnson', email: 'alex@example.com', role: 'User', groupId: 'g1', enrolledAt: new Date().toISOString() },
-        { id: 'u2', name: 'Sarah Miller', email: 'sarah@example.com', role: 'Admin', groupId: 'g3', enrolledAt: new Date().toISOString() },
-        { id: 'u3', name: 'Michael Chen', email: 'michael@example.com', role: 'User', groupId: 'g2', enrolledAt: new Date().toISOString() },
+        { 
+          id: 'u1', 
+          externalId: 'STU-2024-001',
+          name: 'Alice Cooper', 
+          email: 'alice@edu.com', 
+          role: 'Student', 
+          departmentId: 'd1', 
+          academicYear: 'Sophomore',
+          enrolledAt: new Date().toISOString() 
+        },
+        { 
+          id: 'u2', 
+          externalId: 'PROF-102',
+          name: 'Dr. Robert Smith', 
+          email: 'r.smith@edu.com', 
+          role: 'Professor', 
+          departmentId: 'd1', 
+          enrolledAt: new Date().toISOString() 
+        },
+        { 
+          id: 'u3', 
+          externalId: 'STU-2024-089',
+          name: 'Michael Chen', 
+          email: 'm.chen@edu.com', 
+          role: 'Student', 
+          departmentId: 'd2', 
+          academicYear: 'Senior',
+          enrolledAt: new Date().toISOString() 
+        },
       ];
       localStorage.setItem(USERS_KEY, JSON.stringify(demoUsers));
+      localStorage.setItem(DEPARTMENTS_KEY, JSON.stringify(DEFAULT_DEPARTMENTS));
     }
   }
 };
