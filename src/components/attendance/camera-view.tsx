@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, RefreshCcw, Scan } from "lucide-react";
+import { Camera, RefreshCcw } from "lucide-react";
 
 interface CameraViewProps {
   onCapture: (dataUri: string) => void;
@@ -12,30 +12,33 @@ interface CameraViewProps {
 export function CameraView({ onCapture, isLoading }: CameraViewProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    let activeStream: MediaStream | null = null;
+
     async function startCamera() {
       try {
         const mediaStream = await navigator.mediaDevices.getUserMedia({ 
           video: { facingMode: "user" } 
         });
-        setStream(mediaStream);
+        activeStream = mediaStream;
         if (videoRef.current) {
           videoRef.current.srcObject = mediaStream;
         }
       } catch (err) {
         setError("Could not access camera. Please ensure permissions are granted.");
-        console.error(err);
+        console.error("Camera access error:", err);
       }
     }
 
     startCamera();
 
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+      if (activeStream) {
+        activeStream.getTracks().forEach(track => track.stop());
       }
     };
   }, []);
@@ -53,12 +56,21 @@ export function CameraView({ onCapture, isLoading }: CameraViewProps) {
     }
   };
 
+  if (!mounted) {
+    return (
+      <div className="rounded-2xl bg-black aspect-video max-w-2xl mx-auto shadow-2xl border-4 border-white/10 flex items-center justify-center">
+        <RefreshCcw className="w-8 h-8 text-muted-foreground animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="relative group overflow-hidden rounded-2xl bg-black aspect-video max-w-2xl mx-auto shadow-2xl border-4 border-white/10">
       <video 
         ref={videoRef} 
         autoPlay 
         playsInline 
+        muted
         className="w-full h-full object-cover"
       />
       <canvas ref={canvasRef} className="hidden" />
@@ -74,13 +86,11 @@ export function CameraView({ onCapture, isLoading }: CameraViewProps) {
       {!error && (
         <div className="absolute inset-0 pointer-events-none border-[20px] border-black/20">
           <div className="w-full h-full border-2 border-dashed border-white/30 rounded-xl relative">
-            {/* Corner brackets for scanning effect */}
             <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-primary" />
             <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-primary" />
             <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-primary" />
             <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-primary" />
             
-            {/* Scanning line animation */}
             {!isLoading && (
               <div className="absolute top-0 left-0 w-full h-0.5 bg-primary/50 animate-bounce opacity-50" />
             )}
@@ -93,14 +103,14 @@ export function CameraView({ onCapture, isLoading }: CameraViewProps) {
           size="lg" 
           onClick={capture} 
           disabled={isLoading || !!error}
-          className="rounded-full px-8 shadow-xl bg-primary hover:bg-primary/90 transition-transform active:scale-95"
+          className="rounded-full px-8 shadow-xl bg-primary hover:bg-primary/90 transition-transform active:scale-95 flex items-center gap-2"
         >
           {isLoading ? (
-            <RefreshCcw className="w-5 h-5 mr-2 animate-spin" />
+            <RefreshCcw className="w-5 h-5 animate-spin" />
           ) : (
-            <Camera className="w-5 h-5 mr-2" />
+            <Camera className="w-5 h-5" />
           )}
-          {isLoading ? "Processing..." : "Capture"}
+          <span>{isLoading ? "Processing..." : "Capture"}</span>
         </Button>
       </div>
     </div>
